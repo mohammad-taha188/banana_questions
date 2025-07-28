@@ -9,7 +9,7 @@ export default function Header() {
         <Link href={`/`}>🍌</Link>
       </div>
       <div className="">
-        <Link href={`/`}>new</Link>
+        <Link href={`/new-question`}>new</Link>
       </div>
     </div>
   );

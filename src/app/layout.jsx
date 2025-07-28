@@ -2,7 +2,7 @@ import "./globals.css";
 import Header from "./components/Header";
 
 export const metadata = {
-  title: "question banana",
+  title: "banana question",
   description: "if you have question, you can come here",
 };
 
