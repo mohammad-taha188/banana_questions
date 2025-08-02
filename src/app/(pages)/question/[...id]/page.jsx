@@ -32,7 +32,7 @@ export default async function page({ params }) {
   return (
     <div className="flex flex-col justify-center items-center w-full">
       <div
-        className={`${montserrat.className} flex justify-between w-full px-2 border border-gray-200 shadow shadow-gray-300 rounded-sm`}
+        className={`${montserrat.className} flex justify-between gap-1.5 w-full px-2 border border-gray-200 shadow shadow-gray-300 rounded-sm`}
       >
         <h2 className="px-2 py-1 border border-gray-200 shadow shadow-gray-300 rounded-sm my-3">
           {question[0].view ? question[0].view : 0} view
