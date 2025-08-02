@@ -9,9 +9,11 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`container`}>
-        <Header />
-        {children}
+      <body>
+        <div className="px-4">
+          <Header />
+        </div>
+        <div className={`px-15 flex items-center flex-col`}>{children}</div>
       </body>
     </html>
   );

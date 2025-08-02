@@ -2,21 +2,79 @@
 
 import { supabase } from "@/supabase";
 import { useEffect, useState } from "react";
+import POST from "../api/upload/route";
+import Alert from "./Alert";
+import { useRouter } from "next/navigation";
 
 export default function NewQuestionC() {
   let [title, setTitle] = useState();
   let [desc, setDesc] = useState();
-  let [file, setFile] = useState();
   let [error, setError] = useState();
-  function randomID() {
-    return `${new Date().getTime()}${Math.floor(Math.random() * 100000)}`;
+  let [loading, setLoading] = useState(false);
+  let [isUrl, setIsUrl] = useState(true);
+  let [isComplete, setIsComplete] = useState(true);
+  let [isClicked, setIsClicked] = useState(false);
+
+  let [url, setUrl] = useState([]);
+  let navigate = useRouter();
+
+  async function fetchData() {
+    setIsClicked(true);
+    if (!isClicked) {
+      setIsComplete(true);
+      let { error } = await supabase.from("questions").insert({
+        id: generateID(),
+        title: title,
+        desc: desc,
+        userID: 123,
+        image: JSON.stringify(url),
+        addTime: new Date().getTime(),
+      });
+      error ? setError(error) : console.log("good!");
+      !error && navigate.replace("/");
+    }
+  }
+
+  async function imageHandler(e) {
+    const files = Array.from(e.target.files); // همه فایل‌ها
+
+    setLoading(true);
+
+    for (const file of files) {
+      const res = await fetch(
+        `/api/upload?filename=${generateID()}_${file.name}`,
+        {
+          method: "POST",
+          body: file,
+        }
+      );
+
+      if (!res.ok) {
+        setError(true);
+        continue;
+      }
+
+      const data = await res.json();
+      setUrl((prev) => [...prev, data.url]); // چند URL ذخیره می‌شه
+    }
+
+    setLoading(false);
+  }
+
+  function generateID() {
+    const now = Date.now(); // زمان حال به صورت میلی‌ثانیه
+    const random = Math.floor(Math.random() * 100000); // عدد رندوم بین 0 تا 99999
+    return `${now}${random}`;
   }
   return (
-    <div className="flex flex-col items-center gap-5">
+    <div className="flex flex-col items-center gap-5 w-full">
       {error && (
-        <div className="bg-red-500 text-white px-3 py-2 rounded-sm">
-          you have error <br /> {error}
-        </div>
+        <Alert
+          title={error.message}
+          color="bg-red-400"
+          textColor="text-white"
+          isRemoving={false}
+        />
       )}
       <input
         type="text"
@@ -46,27 +104,75 @@ export default function NewQuestionC() {
         id="image"
         className="hidden"
         multiple
-        onChange={(e) => {
-          setFile(e.target.value);
-        }}
+        onChange={(e) => imageHandler(e)}
       />
+      {url.length > 0 &&
+        url.map((index) => (
+          <Alert
+            key={index}
+            title={`image ${index + 1} added`}
+            color="bg-green-400"
+            textColor="text-white"
+          />
+        ))}
+
+      {loading && (
+        <Alert
+          title="loading"
+          color="bg-yellow-400"
+          textColor="text-white"
+          isRemoving={false}
+        />
+      )}
       <button
-        className="btn btn-green"
+        className={`btn btn-green ${loading && "hidden"}`}
         onClick={async () => {
-          //   let { error } = await supabase.from("questions").insert({
-          //     id: randomID(),
-          //     title: title,
-          //     desc: desc,
-          //     userID: 123,
-          //     image: null,
-          //     addTime: new Date().getTime(),
-          //   });
-          //   error ? setError(error) : console.log("good!");
-          console.log(file);
+          if (!title || !desc) {
+            setIsComplete(false);
+          } else {
+            if (url.length == 0) {
+              setIsUrl(false);
+            } else {
+              fetchData();
+            }
+          }
         }}
       >
         add
       </button>
+
+      <button
+        className={`py-2 px-5 rounded-sm shadow-gray-500 bg-gray-500 text-gray-300 outline-1 outline-gray-600 ${
+          !loading && "hidden"
+        }`}
+      >
+        loading
+      </button>
+
+      {isComplete == false && (
+        <p className="text-red-400">pleace complete all inputs</p>
+      )}
+      {!isUrl && (
+        <div className="z-50 border border-gray-200 shadow-gray-100 rounded-sm w-[90%] h-[50%] fixed flex flex-col bg-gray-100 items-center justify-center gap-2">
+          <h2>Do you want to continue without a photo?</h2>
+          <button
+            className="btn btn-red"
+            onClick={(e) => {
+              setIsUrl(true);
+            }}
+          >
+            cancel
+          </button>
+          <button
+            className="btn btn-green"
+            onClick={() => {
+              fetchData();
+            }}
+          >
+            continue
+          </button>
+        </div>
+      )}
     </div>
   );
 }

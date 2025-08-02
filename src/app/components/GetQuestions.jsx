@@ -1,6 +1,7 @@
 import { supabase } from "@/supabase";
 import { Montserrat } from "next/font/google";
 import { Open_Sans } from "next/font/google";
+import Link from "next/link";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -10,7 +11,24 @@ const open_sans = Open_Sans({
 });
 
 export default async function GetQuestions() {
-  let { data, error } = await supabase.from("questions").select("*");
+  let { data, error } = await supabase
+    .from("questions")
+    .select("*")
+    .order("addTime", { ascending: false });
+
+  function shortingNumber(num) {
+    if (num < 1000) {
+      return num;
+    }
+
+    const units = ["", "k", "M", "B", "T"]; // هزار، میلیون، میلیارد، تریلیون
+    const tier = Math.floor(Math.log10(num) / 3);
+
+    const scaled = num / Math.pow(1000, tier);
+    const fixed = scaled.toFixed(scaled < 10 ? 1 : 0); // مثلا 1.2k ولی 12k
+
+    return fixed + units[tier];
+  }
 
   return (
     <div>
@@ -21,25 +39,41 @@ export default async function GetQuestions() {
       )}
       {data.map((q) => {
         return (
-          <div className="" key={q.id}>
-            <div className="border-b-gray-300 shadow shadow-gray-400 rounded-sm px-3 py-2 text-center my-7 cursor-pointer">
-              <h2 className={`${montserrat.className} flex justify-between`}>
-                <div className="border-b-gray-200 shadow shadow-gray-300 rounded-sm px-3 py-2">
-                  {" "}
-                  {q.title}
+          <Link href={`/question/${q.id}`} key={q.id}>
+            <div className="">
+              <div className="border border-gray-200 shadow shadow-gray-500 rounded-sm px-3 py-2 text-center my-7 cursor-pointer">
+                <h2
+                  className={`${montserrat.className} flex justify-between  font-bold`}
+                >
+                  <div className="border border-gray-200 shadow shadow-gray-300 rounded-sm px-3 py-2 max-h-20 max-w-[50%] overflow-hidden">
+                    {q.title}
+                  </div>
+                  <div className="border border-gray-200  shadow shadow-gray-300 rounded-sm px-3 py-2">
+                    {new Date(q.addTime).toLocaleString()}
+                  </div>
+                </h2>
+                <br />
+                <div className=" border border-gray-200 shadow shadow-gray-300 rounded-sm px-3 py-2 flex justify-between">
+                  <h2>
+                    {shortingNumber(q.view) ? shortingNumber(q.view) : 0} view
+                  </h2>
+                  <h2>
+                    {shortingNumber(q.disLike) ? shortingNumber(q.disLike) : 0}{" "}
+                    disLike
+                  </h2>
+                  <h2>
+                    {shortingNumber(q.like) ? shortingNumber(q.like) : 0} like
+                  </h2>
                 </div>
-                <div className="border-b-gray-200 shadow shadow-gray-300 rounded-sm px-3 py-2">
-                  {new Date(q.addTime).toLocaleString()}
+                <br />
+                <div
+                  className={`${open_sans.className} border border-gray-200 shadow shadow-gray-300 rounded-sm px-3 py-2 overflow-hidden max-h-15 text-center whitespace-pre-line `}
+                >
+                  {q.desc}
                 </div>
-              </h2>
-              <br />
-              <p
-                className={`${open_sans.className} border-b-gray-200 shadow shadow-gray-300 rounded-sm px-3 py-2 overflow-hidden max-h-15 flex`}
-              >
-                {q.desc}
-              </p>
+              </div>
             </div>
-          </div>
+          </Link>
         );
       })}
     </div>

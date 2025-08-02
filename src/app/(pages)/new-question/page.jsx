@@ -2,7 +2,7 @@ import NewQuestionC from "@/app/components/NewQuestion";
 
 export default function newQuestion() {
   return (
-    <div>
+    <div className="w-full">
       <NewQuestionC />
     </div>
   );
