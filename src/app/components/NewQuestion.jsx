@@ -83,6 +83,7 @@ export default function NewQuestionC() {
         onChange={(e) => {
           setTitle(e.target.value);
         }}
+        name="title"
       />
       <textarea
         name=""

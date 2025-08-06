@@ -13,6 +13,7 @@ const open_sans = Open_Sans({
 export default async function page({ params }) {
   let id = await params.id[0];
 
+
   let { data, error } = await supabase.from("questions").select("*");
 
   let question = data.filter((q) => {

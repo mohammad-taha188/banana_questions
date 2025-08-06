@@ -6,4 +6,3 @@ let supabaseInfo = {
 };
 
 export const supabase = createClient(supabaseInfo.projectURL, supabaseInfo.key);
-
