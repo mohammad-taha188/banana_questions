@@ -15,7 +15,7 @@ export async function POST(req) {
       value: userId,
       httpOnly: true,
       path: "/",
-      secure: false,
+      secure: true,
       sameSite: "strict",
       maxAge: 60 * 60 * 24, // یک روز
     });

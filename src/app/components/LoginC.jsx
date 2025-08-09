@@ -2,7 +2,7 @@
 
 import { supabase } from "@/supabase";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function LoginC() {
   let [email, setEmail] = useState("");
@@ -13,6 +13,7 @@ export default function LoginC() {
   let [notCompeleted, setNotCompeleted] = useState(false);
   let [error, setError] = useState(false);
   let [success, setSuccess] = useState(false);
+
   return (
     <div className="flex flex-col justify-between items-center gap-4 shadow shadow-gray-300 rounded-sm px-4 py-5 w-full">
       <input
@@ -61,6 +62,7 @@ export default function LoginC() {
                     "Content-Type": "application/json",
                   },
                   body: JSON.stringify({ userId: ID }),
+                  credentials: "include",
                 });
 
                 if (res.ok) {
