@@ -1,10 +1,28 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
+// import GetID from "./GetID";
 
 export default function Header() {
+  let [userLogin, setUserLogin] = useState("");
+
+  useEffect(() => {
+    async function fetchDate() {
+      let res = await fetch("/api/get-cookie");
+
+      let data = await res.json();
+
+      setUserLogin(data);
+    }
+
+    fetchDate();
+  });
+
+
   let links = [
     { name: "home", url: "/ " },
     { name: "new", url: "new-question" },
-    { name: "login", url: "login" },
   ];
   return (
     <div
@@ -21,6 +39,11 @@ export default function Header() {
             </Link>
           );
         })}
+        {userLogin.status ? (
+          <Link href={"/account"}>account</Link>
+        ) : (
+          <Link href={"/login"}>login</Link>
+        )}
       </div>
     </div>
   );

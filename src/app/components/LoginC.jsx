@@ -2,17 +2,20 @@
 
 import { supabase } from "@/supabase";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 import { useEffect, useState } from "react";
+import Header from "./Header";
 
 export default function LoginC() {
   let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
-  let [ID, setID] = useState("");
-  let [isClicked, setIsClicked] = useState(false);
   let [passwordError, setPasswordError] = useState(false);
   let [notCompeleted, setNotCompeleted] = useState(false);
   let [error, setError] = useState(false);
   let [success, setSuccess] = useState(false);
+
+  let navigate = useRouter();
 
   return (
     <div className="flex flex-col justify-between items-center gap-4 shadow shadow-gray-300 rounded-sm px-4 py-5 w-full">
@@ -68,6 +71,7 @@ export default function LoginC() {
                 if (res.ok) {
                   const data = await res.json();
                   console.log(data);
+                  navigate.replace("/");
                 } else {
                   console.log(res);
                 }

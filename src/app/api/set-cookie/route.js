@@ -1,6 +1,6 @@
 // src/app/api/set-cookie/route.js
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
 
 export async function POST(req) {
   const body = await req.json();
@@ -10,14 +10,23 @@ export async function POST(req) {
     let response = NextResponse.json({ success: true });
 
     // api/set-cookie/route.js
+
+    let key = process.env.JWT_KEY;
+
+    let payload = {
+      userId: userId,
+    };
+
+    let token = jwt.sign(payload, key, { expiresIn: "31d" });
+
     response.cookies.set({
-      name: "ID",
-      value: userId,
+      name: "session",
+      value: token,
       httpOnly: true,
       path: "/",
-      secure: true,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 60 * 60 * 24, // یک روز
+      maxAge: 31 * 24 * 60 * 60, // 31 روز بر حسب ثانیه
     });
 
     return response;

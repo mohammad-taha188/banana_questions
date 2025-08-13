@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 
 export async function GET() {
   const cookieStore = cookies();
-  const userId = cookieStore.get("session")?.value;
+  const userId = await cookieStore.delete("session")?.value;
 
   if (userId) {
     return new Response(JSON.stringify({ userId, status: true }), {
