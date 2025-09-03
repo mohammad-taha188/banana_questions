@@ -98,7 +98,7 @@ export default function Sign_upC() {
                 console.log("userName : ", userName);
 
                 let { error } = await supabase.from("users").insert({
-                  id: userID,
+                  userId: userID,
                   name: name,
                   password: password,
                   userName: userName,

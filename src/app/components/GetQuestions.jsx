@@ -1,15 +1,6 @@
 import { supabase } from "@/supabase";
-import { Montserrat } from "next/font/google";
-import { Open_Sans } from "next/font/google";
 import Link from "next/link";
 import FilterQuestions from "./FilterQuestions";
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-});
-const open_sans = Open_Sans({
-  subsets: ["latin"],
-});
 
 export default async function GetQuestions({ filterValue }) {
   let searchParams = await filterValue;
@@ -21,6 +12,10 @@ export default async function GetQuestions({ filterValue }) {
       ascending: false,
       nullsFirst: false,
     });
+
+  let { data: users, error: userError } = await supabase
+    .from("users")
+    .select("*");
 
   function shortingNumber(num) {
     if (num < 1000) {
@@ -37,14 +32,17 @@ export default async function GetQuestions({ filterValue }) {
   }
 
   return (
-    <div className="w-[90%] flex flex-col items-center justify-center m-0 p-0 gap-7">
+    <div className="w-[90%] flex flex-col items-center justify-center m-0 p-0 gap-7 my-6">
       {error && (
         <div className="bg-red-500 text-white px-3 py-2 rounded-sm">
-          you have error <br /> {error}
+          you have error <br /> {JSON.stringify(error)}
         </div>
       )}
 
       <FilterQuestions filter={searchParams} />
+
+      {console.log(data)}
+
       {data
         .filter((q) => {
           if (searchParams.search) {
@@ -56,41 +54,75 @@ export default async function GetQuestions({ filterValue }) {
           }
         })
         .map((q) => {
+          let userName = users.filter((user) => user.id == q?.userID);
           return (
-            <Link href={`/question/${q.id}`} key={q.id} className="w-full">
+            <Link
+              href={`/question/${q?.question_id}`}
+              key={q.question_id}
+              className="w-full"
+            >
               <div>
                 <div className="border border-gray-200 shadow shadow-gray-500 rounded-sm px-3 py-2 text-center cursor-pointer w-full">
-                  <h2
-                    className={`${montserrat.className} flex justify-between font-bold`}
-                  >
-                    <div className="border border-gray-200 shadow shadow-gray-300 rounded-sm px-3 py-2 max-h-20 max-w-[50%] overflow-hidden">
+                  <h2 className={`font-semibold flex justify-between `}>
+                    <div className="border border-gray-200 shadow shadow-gray-300 rounded-sm px-3 py-2 max-h-17 max-w-[50%] overflow-hidden">
                       {q.title}
                     </div>
                     <div className="border border-gray-200  shadow shadow-gray-300 rounded-sm px-3 py-2">
-                      {new Date(q.addTime).toLocaleString()}
+                      {new Date(q?.addTime).toLocaleString()}
                     </div>
                   </h2>
                   <br />
+
+                  <h2 className={`font-semibold flex justify-between `}>
+                    <div className="border border-gray-200  shadow shadow-gray-300 rounded-sm px-3 py-2 m-auto">
+                      {userName[0]?.name || "unknown"}
+                    </div>
+                  </h2>
+
+                  <br />
                   <div className=" border border-gray-200 shadow shadow-gray-300 rounded-sm px-3 py-2 flex justify-between">
-                    <h2>
-                      {shortingNumber(q.view) ? shortingNumber(q.view) : 0} view
+                    <h2 className="font-thin">
+                      {shortingNumber(q?.view.length)
+                        ? shortingNumber(q?.view.length)
+                        : 0}{" "}
+                      view
                     </h2>
-                    <h2>
-                      {shortingNumber(q.disLike)
-                        ? shortingNumber(q.disLike)
+
+                    <h2 className="font-thin">
+                      {shortingNumber(
+                        q?.votes
+                          ?.map((v) => v.type)
+                          .filter((type) => type == "disLike").length
+                      )
+                        ? shortingNumber(
+                            q?.votes
+                              ?.map((v) => v.type)
+                              .filter((type) => type == "disLike").length
+                          )
                         : 0}{" "}
                       disLike
                     </h2>
-                    <h2>
-                      {shortingNumber(q.like) ? shortingNumber(q.like) : 0} like
+                    <h2 className="font-thin">
+                      {shortingNumber(
+                        q?.votes
+                          ?.map((v) => v.type)
+                          .filter((type) => type == "like").length
+                      )
+                        ? shortingNumber(
+                            q?.votes
+                              ?.map((v) => v.type)
+                              .filter((type) => type == "like").length
+                          )
+                        : 0}{" "}
+                      like
                     </h2>
                   </div>
                   <br />
-                  <div
-                    className={`${open_sans.className} border border-gray-200 shadow shadow-gray-300 rounded-sm px-3 py-2 overflow-hidden max-h-15 text-center whitespace-pre-line `}
+                  <p
+                    className={` border border-gray-200 shadow shadow-gray-300 rounded-sm px-3 py-2 overflow-hidden max-h-15 text-center whitespace-pre-line `}
                   >
-                    {q.desc}
-                  </div>
+                    {q?.desc}
+                  </p>
                 </div>
               </div>
             </Link>

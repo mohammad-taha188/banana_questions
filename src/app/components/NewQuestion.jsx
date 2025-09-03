@@ -6,6 +6,7 @@ import POST from "../api/upload/route";
 import Alert from "./Alert";
 import { useRouter } from "next/navigation";
 import Loading from "../loading";
+import GetID from "./GetID";
 
 export default function NewQuestionC() {
   let [title, setTitle] = useState();
@@ -32,14 +33,16 @@ export default function NewQuestionC() {
   });
 
   async function fetchData() {
+    let userId = await GetID();
+
     setIsClicked(true);
     if (!isClicked) {
       setIsComplete(true);
       let { error } = await supabase.from("questions").insert({
-        id: generateID(),
+        question_id: generateID(),
         title: title,
         desc: desc,
-        userID: 123,
+        userID: userId.userId,
         image: JSON.stringify(url),
         addTime: new Date().getTime(),
       });
@@ -195,7 +198,7 @@ export default function NewQuestionC() {
       <div className="flex justify-center items-center flex-col gap-12">
         <h2>please first login</h2>
         <button
-          className="btn btn-green"
+          className="btn btn-yellow"
           onClick={() => {
             navigate.replace("/login");
           }}

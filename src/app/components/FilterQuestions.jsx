@@ -25,8 +25,6 @@ export default function FilterQuestions({ filter }) {
         className="outline-0 border border-gray-200 rounded-sm px-2 py-1"
       >
         <option value="view">view</option>
-        <option value="like">like</option>
-        <option value="disLike">disLike</option>
         <option value="addTime">date</option>
       </select>
     </div>
