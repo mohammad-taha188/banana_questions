@@ -18,12 +18,12 @@ export default function LoginC() {
   let navigate = useRouter();
 
   return (
-    <div className="max-w-sm w-full mx-auto mt-10 p-6 bg-white shadow-lg rounded-xl flex flex-col gap-4">
+    <div className="flex flex-col justify-between items-center gap-4 shadow shadow-gray-300 rounded-sm px-4 py-5 w-full">
       <h2 className="text-2xl font-bold text-gray-800 text-center">Login</h2>
 
       <input
         type="email"
-        className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-lightBlue-400 focus:outline-none transition w-full"
+        className="border border-gray-200 rounded-sm px-2 py-1 focus:outline focus:outline-gray-300 w-[90%]"
         placeholder="Email"
         name="email"
         onChange={(e) => setEmail(e.target.value)}
@@ -31,29 +31,21 @@ export default function LoginC() {
 
       <input
         type="password"
-        className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-lightBlue-400 focus:outline-none transition w-full"
+        className="border border-gray-200 rounded-sm px-2 py-1 focus:outline focus:outline-gray-300 w-[90%]"
         placeholder="Password"
         name="password"
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      <div className="flex justify-between text-sm text-gray-500">
-        <Link
-          href="forget-password"
-          className="hover:text-lightBlue-600 transition-colors font-medium"
-        >
-          Forgot Password?
-        </Link>
-        <Link
-          href="sign-up"
-          className="hover:text-lightBlue-600 transition-colors font-medium"
-        >
-          Sign Up
-        </Link>
-      </div>
+      <Link href={`forget-password`} className="inline m-0 p-0">
+        forget password
+      </Link>
+      <Link href={`sign-up`} className="inline m-0 p-0">
+        sign-up
+      </Link>
 
       <button
-        className="bg-lightBlue-500 hover:bg-lightBlue-600 text-white font-semibold py-2 rounded-lg transition cursor-pointer"
+        className="btn btn-green"
         onClick={async () => {
           let { data, error } = await supabase.from("users").select("*");
 

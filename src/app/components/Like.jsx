@@ -178,6 +178,6 @@ export default function Like({ vote, questionID }) {
       </div>
     );
   } else {
-    return <p className="text-red-400">please first login or wait.</p>;
+    return <p className="text-red-400">Loading...</p>;
   }
 }

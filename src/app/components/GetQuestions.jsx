@@ -16,7 +16,9 @@ export default async function GetQuestions({ filterValue }) {
   let { data: users, error: userError } = await supabase
     .from("users")
     .select("*");
-
+  if (userError) {
+    Error();
+  }
   function shortingNumber(num) {
     if (num < 1000) {
       return num;

@@ -1,5 +1,7 @@
+import Answer from "@/app/components/answer";
 import GetID from "@/app/components/GetID";
 import Like from "@/app/components/Like";
+import Error from "@/app/error";
 import { supabase } from "@/supabase";
 import { Montserrat } from "next/font/google";
 import { Open_Sans } from "next/font/google";
@@ -21,7 +23,9 @@ export async function generateMetadata({ params }) {
   let question = data.filter((q) => {
     return q.question_id == id;
   });
-
+  if (error) {
+    Error();
+  }
   return { title: question[0].title, description: question[0].desc };
 }
 
@@ -31,11 +35,20 @@ export default async function page({ params }) {
   const userId = await GetID();
 
   let { data, error } = await supabase.from("questions").select("*");
+  if (error) {
+    Error();
+  }
+  let { data: thisUser, error: userError } = await supabase
+    .from("users")
+    .select("*")
+    .eq("userId", userId.userId);
 
   let question = data.filter((q) => {
     return q.question_id == id;
   });
-
+  if (userError) {
+    Error();
+  }
   const imageArray = question[0]?.image ? JSON?.parse(question[0].image) : null;
 
   let dateQuestion = `${new Date(question[0].addTime).getHours()} : ${new Date(
@@ -60,6 +73,9 @@ export default async function page({ params }) {
         .from("questions")
         .update({ view: arrayNewView })
         .eq("question_id", question[0].question_id);
+      if (viewError) {
+        Error();
+      }
     } else {
       if (
         question[0].view
@@ -70,6 +86,9 @@ export default async function page({ params }) {
           .from("questions")
           .update({ view: views })
           .eq("question_id", question[0].question_id);
+        if (viewError) {
+          Error();
+        }
       } else {
         console.log("your viewed");
       }
@@ -128,6 +147,29 @@ export default async function page({ params }) {
         }
         questionID={question[0].question_id}
       />
+      <br />
+      <details className="w-full text-center select-none border border-gray-200 shadow shadow-gray-100 rounded-sm py-2 my-2 px-3">
+        <summary className="cursor-pointer">comments</summary>
+        <Answer questionID={question[0].question_id} />
+
+        {question[0].answer.map((answer) => {
+          return (
+            <div
+              className="font-semibold gap-6 my-5 w-full px-3 border border-gray-200 shadow shadow-gray-300 rounded-sm py-2 cursor-pointer"
+              key={answer.date}
+            >
+              <div className="flex justify-between">
+                <p>{thisUser[0].userName}</p>
+                <p>{thisUser[0].name}</p>
+              </div>
+              <br />
+              <hr />
+              <br />
+              <h2 className="text-center">{answer.answer}</h2>
+            </div>
+          );
+        })}
+      </details>
     </div>
   );
 }

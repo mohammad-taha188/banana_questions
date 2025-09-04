@@ -83,7 +83,7 @@ export default async function account() {
           <h2 className="font-semibold text-center">your questions</h2>
 
           <details className="w-full text-center select-none border border-gray-200 shadow shadow-gray-100 rounded-sm py-2 my-2">
-            <summary></summary>
+            <summary className="cursor-pointer"></summary>
             <div className="w-full flex flex-col gap-3 items-center">
               {userQuestions.map((userQuestion) => {
                 return (

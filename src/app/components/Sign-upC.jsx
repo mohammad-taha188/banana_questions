@@ -129,6 +129,7 @@ export default function Sign_upC() {
 
   return (
     <div className="flex flex-col justify-between items-center gap-4 shadow shadow-gray-300 rounded-sm px-4 py-5 w-full">
+      <h2 className="text-2xl font-bold text-gray-800 text-center">Sign-up</h2>
       <input
         type="text"
         className="border border-gray-200 rounded-sm px-2 py-1 focus:outline focus:outline-gray-300 w-[90%]"
