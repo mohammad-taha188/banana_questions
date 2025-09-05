@@ -38,17 +38,11 @@ export default async function page({ params }) {
   if (error) {
     Error();
   }
-  let { data: thisUser, error: userError } = await supabase
-    .from("users")
-    .select("*")
-    .eq("userId", userId.userId);
 
   let question = data.filter((q) => {
     return q.question_id == id;
   });
-  if (userError) {
-    Error();
-  }
+
   const imageArray = question[0]?.image ? JSON?.parse(question[0].image) : null;
 
   let dateQuestion = `${new Date(question[0].addTime).getHours()} : ${new Date(
@@ -159,8 +153,8 @@ export default async function page({ params }) {
               key={answer.date}
             >
               <div className="flex justify-between">
-                <p>{thisUser[0].userName}</p>
-                <p>{thisUser[0].name}</p>
+                <p>{answer.userId}</p>
+                {/* <p>{thisUser[0].name}</p> */}
               </div>
               <br />
               <hr />

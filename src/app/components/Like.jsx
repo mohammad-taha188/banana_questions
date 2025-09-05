@@ -150,7 +150,7 @@ export default function Like({ vote, questionID }) {
       <div className="flex flex-col gap-6 items-center">
         <div className="flex border border-gray-200 shadow shadow-gray-300 rounded-sm px-2 py-1 gap-5 justify-between">
           <img
-            src={!isLike ? "/like.svg" : "/like-full.svg"}
+            src={!isLike ? "/Like.svg" : "/like-full.svg"}
             alt="like"
             className="w-7 h-7 cursor-pointer"
             id="like"
