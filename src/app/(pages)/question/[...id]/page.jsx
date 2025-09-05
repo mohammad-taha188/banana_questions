@@ -39,6 +39,13 @@ export default async function page({ params }) {
     Error();
   }
 
+  let { data: users, error: usersError } = await supabase
+    .from("users")
+    .select("*");
+  if (usersError) {
+    Error();
+  }
+
   let question = data.filter((q) => {
     return q.question_id == id;
   });
@@ -142,24 +149,35 @@ export default async function page({ params }) {
         questionID={question[0].question_id}
       />
       <br />
-      <details className="w-full text-center select-none border border-gray-200 shadow shadow-gray-100 rounded-sm py-2 my-2 px-3">
+      <details className="w-full text-center border border-gray-200 shadow shadow-gray-100 rounded-sm py-2 my-2 px-3">
         <summary className="cursor-pointer">comments</summary>
         <Answer questionID={question[0].question_id} />
 
         {question[0].answer.map((answer) => {
           return (
             <div
-              className="font-semibold gap-6 my-5 w-full px-3 border border-gray-200 shadow shadow-gray-300 rounded-sm py-2 cursor-pointer"
+              className="font-semibold gap-6 my-5 w-full px-3 border border-gray-200 shadow shadow-gray-300 rounded-sm py-2 "
               key={answer.date}
             >
               <div className="flex justify-between">
-                <p>{answer.userId}</p>
-                {/* <p>{thisUser[0].name}</p> */}
+                <p className="">
+                  {
+                    users.filter((user) => {
+                      return user.userId == answer.userId;
+                    })[0].userName
+                  }
+                </p>
+                <p>
+                  {" "}
+                  {`${String(new Date(answer.date).getMonth() + 1).padStart(2, "0")} / ${String(new Date(answer.date).getDate()).padStart(2, "0")} / ${new Date(answer.date).getFullYear()} || ${String(new Date(answer.date).getHours()).padStart(2, "0")} : ${String(new Date(answer.date).getMinutes()).padStart(2, "0")} : ${String(new Date(answer.date).getSeconds()).padStart(2, "0")}`}
+                </p>
               </div>
               <br />
               <hr />
               <br />
-              <h2 className="text-center">{answer.answer}</h2>
+              <h2 className="text-center whitespace-pre-wrap">
+                {answer.answer}
+              </h2>
             </div>
           );
         })}

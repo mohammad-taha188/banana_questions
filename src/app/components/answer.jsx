@@ -25,7 +25,7 @@ function Answer({ questionID }) {
         onChange={(e) => {
           setValue(e.target.value);
         }}
-        className="border border-gray-300 shadow shadow-gray-200 focus:outline outline-gray-300 px-2 rounded-sm w-[80%] py-1"
+        className="border border-gray-300 h-[200px] shadow shadow-gray-200 focus:outline outline-gray-300 px-2 rounded-sm w-[80%] py-1"
         ref={input}
       ></textarea>
       <button
