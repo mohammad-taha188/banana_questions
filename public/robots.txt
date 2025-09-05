@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://banana-questions.vercel.app/sitemap.xml

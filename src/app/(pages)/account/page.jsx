@@ -6,7 +6,19 @@ import jwt from "jsonwebtoken";
 import Error from "@/app/error";
 
 export function generateMetadata() {
-  return { title: "account", description: "your account page!" };
+  return {
+    title: "account",
+    description: "your account page!",
+    keywords: [
+      "banana",
+      "banana-questions",
+      "banana-question",
+      "StackOverflow",
+      "question",
+      "account",
+      "user",
+    ],
+  };
 }
 
 export default async function account() {

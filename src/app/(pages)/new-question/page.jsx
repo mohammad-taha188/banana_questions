@@ -2,8 +2,16 @@ import NewQuestionC from "@/app/components/NewQuestion";
 
 export function generateMetadata() {
   return {
-    title: "add new questions",
-    description: "this is page for add new questions.",
+    title: "new question",
+    description: "this is page for add new question.",
+    keywords: [
+      "banana",
+      "banana-questions",
+      "banana-question",
+      "StackOverflow",
+      "question",
+      "questions",
+    ],
   };
 }
 

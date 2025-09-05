@@ -4,6 +4,14 @@ import Header from "./components/Header";
 export const metadata = {
   title: "banana questions",
   description: "if you have question, you can come here!.",
+  keywords: [
+    "banana",
+    "banana-questions",
+    "banana-question",
+    "StackOverflow",
+    "question",
+    "questions",
+  ],
 };
 
 export default async function RootLayout({ children }) {

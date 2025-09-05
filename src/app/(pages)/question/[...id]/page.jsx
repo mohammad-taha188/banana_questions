@@ -26,7 +26,19 @@ export async function generateMetadata({ params }) {
   if (error) {
     Error();
   }
-  return { title: question[0].title, description: question[0].desc };
+  return {
+    title: question[0].title,
+    description: question[0].desc,
+    keywords: [
+      "banana",
+      "banana-questions",
+      "banana-question",
+      "StackOverflow",
+      "question",
+      "questions",
+      question[0].title,
+    ],
+  };
 }
 
 export default async function page({ params }) {
